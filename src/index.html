@@ -8,19 +8,21 @@
     <link rel="stylesheet" href="./css/styles.css">
   </head>
   <body>
-
-    <form class="search-form" id="search-form">
-      <input type="text" name="searchQuery" autocomplete="off" placeholder="Search images..." />
-      <button type="submit">Search</button>
-    </form>
+    <div class="wrapper">
+      <form class="search-form" id="search-form">
+        <input type="text" name="searchQuery" autocomplete="off" placeholder="Search images..." />
+        <button type="submit">Search</button>
+      </form>
+    </div>
 
     <div class="gallery">
       <!-- Карточки изображений -->
     </div>
     
-    <button type="button" class="load-more">Load more</button>
+    <div class="button-wrapper">
+      <button type="button" class="load-more hide">Load more</button>
+    </div>
 
     <script src="index.js" type="module"></script>
-    <script src="./js/fetchCountries.js" type="module"></script>
   </body>
 </html>

@@ -7,31 +7,107 @@ body {
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #fafafa;
+  background-color: #e5f5f2;
   color: #212121;
   line-height: 1.5;
-  padding-left: 50px;
-  padding-right: 50px;
   margin: 0;
 }
 
-#search-box {
-  font: inherit;
-  /* padding: 8px; */
-  max-width: 320px;
-  margin-bottom: 16px;
-}
-
-/* .flag-name {
-  display: flex;
-  align-items: center;
-}
-
-.flag-name h2 {
-  margin-left: 10px;
-} */
 
 ul {
   list-style: none;
   padding: 0;
+}
+
+.hide {
+  display: none;
+}
+
+.search-form {
+  display:flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.wrapper {
+  background-color: #2f55ee;
+  padding: 40px 0;
+}
+
+.gallery {
+  grid-gap: 32px;
+  max-width: calc(100vw - 80px);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  margin: 24px auto;
+  padding: 0;
+  display: grid;
+}
+
+.info {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 0 16px;
+  display: flex;
+}
+
+.photo-card {
+  border-radius: 6px;
+  transition: scale .25s ease-out;
+  overflow: hidden;
+  box-shadow: 2px 2px 4px #0006;
+}
+
+.photo-card:hover {
+  scale: 1.1;
+  cursor: pointer;
+}
+
+.gallery img {
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.search-form>button {
+  color: #2f55ee;
+  background-color: #f0f8ff;
+  border: none;
+}
+
+button {
+  width: 120px;
+  cursor: pointer;
+  
+  border-radius: 4px;
+  outline: none;
+  padding: 6px 8px;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+
+button.load-more {
+  font-size: 25px;
+  font-weight: 550;
+  border-radius: 10px;
+  color: #414e52;
+  background-color: #f4f5e9;
+  border: none;
+  width: 300px;
+  height: 50px;
+  box-shadow: 2px 2px 4px #0006;
+}
+
+.search-form>input {
+  width: 200px;
+  border-radius: 4px;
+  color: #2f55ee;
+  background-color: #f0f8ff;
 }
