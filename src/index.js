@@ -1,3 +1,4 @@
+const axios = require('axios').default;
 
 
 //Cсылки на элементы ДОМ
@@ -6,17 +7,9 @@ const refs = {
     gallery: document.querySelector(".gallery"),
     buttonLoadMore: document.querySelector(".load-more")
 }
-
-
 // const URL = "https://pixabay.com/api/?key=34323245-7786a126c6836dc3f9fefa48e&q=inputValue&page=1&per_page=40&image_type=photo&orientation=horizontal&safesearch=true";
-const urlOptions = {
-    key: "34323245-7786a126c6836dc3f9fefa48e",
-    perPage: 40,
-    imageType: "photo",
-    orientation: "horizontal",
-    safesearch: true
-}
 let currentPage = 1;
+let userInput = "";
 
 //Слушатели событий
 refs.form.addEventListener("submit", onSubmit);
@@ -26,9 +19,52 @@ refs.buttonLoadMore.addEventListener("click", onLoad);
 //Функция обработчик по сабмиту
 function onSubmit(event) {
     event.preventDefault();    
-    const userInput = event.currentTarget.elements[0].value.trim();
-    if(!userInput) 
-    getImages(urlOptions, userInput, currentPage);
+    userInput = event.currentTarget.elements[0].value.trim();
+    if(!userInput) return;
+    const options = {        
+        params: {
+            key: "34323245-7786a126c6836dc3f9fefa48e",
+            q: userInput,
+            page: currentPage,
+            per_page: 40,
+            image_type: "photo",
+            orientation: "horizontal",
+            safesearch: true,
+        }        
+    }
+
+    getImages(options).then((data) => {
+        console.log(data.hits[0]);
+        const { hits, totalHits } = data;
+        if (hits.length === 0) console.log("Sorry, there are no images matching your search query. Please try again."); // It could be moved to getImages function
+        const galleryMurkup = hits.map((image) => {
+            const { webformatURL, largeImageURL, tags, likes, views, comments, downloads } = image;
+            return `<div class="photo-card">
+                        <img src=${webformatURL} alt=${tags} loading="lazy" />
+                        <div class="info">
+                            <p class="info-item">
+                                <b>Likes</b>
+                                ${likes}
+                            </p>
+                            <p class="info-item">
+                                <b>Views</b>
+                                ${views}
+                            </p>
+                            <p class="info-item">
+                                <b>Comments</b>
+                                ${comments}
+                            </p>
+                            <p class="info-item">
+                                <b>Downloads</b>
+                                ${downloads}
+                            </p>
+                        </div>
+                    </div>`;
+        }).join(" ");
+        return refs.gallery.innerHTML = galleryMurkup;
+        //totalHits
+    });
+
 }
 
 
@@ -38,15 +74,17 @@ function onLoad(event) {
 
 
 //Асинхронная функция стягивания картинок
-async function getImages(searchUrlOptions, inputValue, currentPage) {
+async function getImages(urlOptions) {
     try {
-        const { key, perPage, imageType, orientation, safesearch } = searchUrlOptions;
-        const response = await fetch(`https://pixabay.com/api/?key=${key}&q=${inputValue}&page=${currentPage}&per_page=${perPage}&image_type=${imageType}&orientation=${orientation}&safesearch=${safesearch}`);
-        const images = await response.json();
-        console.log(images);
-        return images;
+        const response = await axios.get('https://pixabay.com/api/', urlOptions);
+        return response.data;
     } catch (error) {
-        console.log(error);//Сюда поставить кастомное предупреждение
+        console.log(error.status);//Сюда поставить кастомное предупреждение
     }    
 }
 
+//===========================================================================================================================================//
+
+// async function fetchAndMurkup(optionsToURL, ) {
+
+// }
