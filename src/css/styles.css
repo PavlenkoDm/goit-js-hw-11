@@ -29,18 +29,59 @@ ul {
   gap: 20px;
 }
 
+.search-form>input {
+  width: 200px;
+  border-radius: 4px;
+  color: #2f55ee;
+  background-color: #f0f8ff;
+}
+
+.search-form>button:hover,
+.search-form>button:focus,
+.search-form>button:active {
+  background-color: rgb(195, 226, 254);
+}
+
+.search-form>button {
+  color: #2f55ee;
+  background-color: #f0f8ff;
+  border: none;
+}
+
 .wrapper {
   background-color: #2f55ee;
   padding: 40px 0;
 }
 
 .gallery {
-  grid-gap: 32px;
-  max-width: calc(100vw - 80px);
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  margin: 24px auto;
-  padding: 0;
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 32px;
+  padding: 0;
+  margin: 0;
+  max-width: calc(100vw - 80px);
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.gallery img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+.photo-card {
+  border-radius: 6px;
+  transition: transform .25s ease-out;
+  overflow: hidden;
+  box-shadow: 2px 2px 4px #0006;
+}
+
+.photo-card:hover {
+  transform: scale(1.05);
+  cursor: pointer;
 }
 
 .info {
@@ -52,29 +93,6 @@ ul {
   display: flex;
 }
 
-.photo-card {
-  border-radius: 6px;
-  transition: scale .25s ease-out;
-  overflow: hidden;
-  box-shadow: 2px 2px 4px #0006;
-}
-
-.photo-card:hover {
-  scale: 1.1;
-  cursor: pointer;
-}
-
-.gallery img {
-  width: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.search-form>button {
-  color: #2f55ee;
-  background-color: #f0f8ff;
-  border: none;
-}
 
 button {
   width: 120px;
@@ -105,9 +123,3 @@ button.load-more {
   box-shadow: 2px 2px 4px #0006;
 }
 
-.search-form>input {
-  width: 200px;
-  border-radius: 4px;
-  color: #2f55ee;
-  background-color: #f0f8ff;
-}

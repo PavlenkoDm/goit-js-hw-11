@@ -1,16 +1,8 @@
+import SimpleLightbox from "simplelightbox";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-
-
-const axios = require('axios').default;
-
-
-//============================================== Cсылки на элементы ДОМ ============================================================//
-const refs = {
-    form: document.querySelector("#search-form"),
-    gallery: document.querySelector(".gallery"),
-    buttonLoadMore: document.querySelector(".load-more")
-}
-
+import { refs } from './refs/reference';
+import { getImages } from './api/get-images';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 
 let currentPage = 1;
@@ -19,16 +11,16 @@ const itemsOnPage = 40;
 let totalItems = 0;
 let isActive = false;
 
+const lightbox = new SimpleLightbox(".gallery a", {captionDelay: 300, captionsData: "alt",});
 
-
-//======================================================== Слушатели событий ============================================================//
+//=== СЛУШАТЕЛИ СОБЫТИЙ ============================================================//
 refs.form.addEventListener("submit", onSubmit);
 refs.buttonLoadMore.addEventListener("click", onLoadMore);
 
 
 
 
-//====================================================== Функция обработчик по сабмиту ========================================================//
+//=== АСИНХРОННАЯ ФУНКЦИЯ-ОБРАБОТЧИК ПО SUBMIT ========================================//
 async function onSubmit(event) {
     event.preventDefault();
     if (isActive) return;
@@ -37,8 +29,8 @@ async function onSubmit(event) {
     totalItems = 0;
     currentPage = 1;
     
-    userInput = event.currentTarget.elements[0].value.trim();
-    // console.log(event.currentTarget.elements.name.value);
+    userInput = event.currentTarget.elements.searchQuery.value.trim();
+
     if (!userInput) return;    
 
     try {
@@ -53,7 +45,7 @@ async function onSubmit(event) {
 }
 
 
-//=================================================Асинхронная функция обработчик по клику догрузки ========================================================//
+//=== АСИНХРОННАЯ ФУНКЦИЯ-ОБРАБОТЧИК ПО КЛИКУ НА КНОПКУ ДОГРУЗКИ ИЗОБРАЖЕНИЙ ================//
 async function onLoadMore(event) {
     event.preventDefault();
     if (isActive) return;
@@ -72,15 +64,7 @@ async function onLoadMore(event) {
 
 
 
-//=================================================Асинхронная функция стягивания картинок =============================================//
-async function getImages(urlOptions) {
-    const response = await axios.get('https://pixabay.com/api/', urlOptions);
-    return response.data;
-}
-
-
-
-//==================================================Функция создания разметки ===========================================================//
+//=== ФУНКЦИЯ СОЗДАНИЯ РАЗМЕТКИ ===========================================================//
 function createMurkup(data, amounOfItemsOnPage) {
     if (!data.hasOwnProperty("totalHits")) return;
 
@@ -102,7 +86,7 @@ function createMurkup(data, amounOfItemsOnPage) {
     const galleryMurkup = hits.map((image) => {
         const { webformatURL, largeImageURL, tags, likes, views, comments, downloads } = image;
         return `<div class="photo-card">
-                    <img src=${webformatURL} alt=${tags} loading="lazy" width=320 height=240 />
+                    <a href="${largeImageURL}"><img src="${webformatURL}" alt="${tags}" loading="lazy" width=320 height=240 /></a>
                     <div class="info">
                         <p class="info-item">
                             <b>Likes</b>
@@ -130,29 +114,29 @@ function createMurkup(data, amounOfItemsOnPage) {
             onHideButtonLoadMore();
         }
         
-        currentPage += 1;
-        totalItems = currentPage * itemsOnPage;
+    currentPage += 1;
+    totalItems = currentPage * itemsOnPage;
         
-        return refs.gallery.insertAdjacentHTML("beforeend", galleryMurkup);
+    return refs.gallery.insertAdjacentHTML("beforeend", galleryMurkup);
 
 }
 
 
-//============================================= Функция скрытия кнопки Загрузить больше =======================================//
+//=== ФУНКЦИЯ СКРЫТИЯ КНОПКИ ЗАГРУЗИТЬ БОЛЬШЕ =======================================//
 function onHideButtonLoadMore() {
     refs.buttonLoadMore.classList.add("hide");
 }
 
 
 
-//============================================= Функция переключения состояния активности поиска =============================//
+//=== ФУНКЦИЯ ПЕРЕКЛЮЧЕНИЯ СОСТОЯНИЯ ПОИСКА(АКТИВНЫЙ, НЕАКТИВНЫЙ) =============================//
 function toggleIsActiveProp(bool) {
     isActive = bool;
 }
 
 
 
-//==================================================== Функция создания объекта параметров запроса URL ================//
+//=== ФУНКЦИЯ СОЗДАНИЯ ОБЪЕКТА НАСТРОЙКИ URL ЗАПРОСА ================//
 function createUrlParameters(inputValue, pageCurrent, amountOnPage) {
     return {
         params: {
@@ -166,3 +150,5 @@ function createUrlParameters(inputValue, pageCurrent, amountOnPage) {
         }  
     }
 }
+
+
