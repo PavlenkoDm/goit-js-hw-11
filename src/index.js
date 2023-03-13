@@ -31,12 +31,14 @@ refs.buttonLoadMore.addEventListener("click", onLoadMore);
 //====================================================== Функция обработчик по сабмиту ========================================================//
 async function onSubmit(event) {
     event.preventDefault();
-    if (isActive === true) return;
+    if (isActive) return;
     toggleIsActiveProp(true);
     refs.gallery.innerHTML = "";
     totalItems = 0;
+    currentPage = 1;
     
     userInput = event.currentTarget.elements[0].value.trim();
+    console.log(event.currentTarget.elements.name.value);
     if (!userInput) return;    
 
     const options = createUrlParameters(userInput, currentPage, itemsOnPage);
@@ -49,7 +51,7 @@ async function onSubmit(event) {
 //=================================================Асинхронная функция обработчик по клику догрузки ========================================================//
 async function onLoadMore(event) {
     event.preventDefault();
-    if (isActive === true) return;
+    if (isActive) return;
     toggleIsActiveProp(true);
     
     const options = createUrlParameters(userInput, currentPage, itemsOnPage);
@@ -86,6 +88,11 @@ function createMurkup(data, amounOfItemsOnPage) {
     if (hits.length === 0) {
         console.log("Sorry, there are no images matching your search query. Please try again.");
         Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+        onHideButtonLoadMore();
+        return;
+    }
+
+    if (hits.length < itemsOnPage) {
         onHideButtonLoadMore();
         return;
     }
