@@ -11,12 +11,13 @@ const itemsOnPage = 40;
 let totalItems = 0;
 let isActive = false;
 
-const lightbox = new SimpleLightbox(".gallery a", {captionDelay: 300, captionsData: "alt",});
+const lightbox = new SimpleLightbox(".gallery a", {captionDelay: 300, captionsData: "alt"});
+
+
 
 //=== СЛУШАТЕЛИ СОБЫТИЙ ============================================================//
 refs.form.addEventListener("submit", onSubmit);
 refs.buttonLoadMore.addEventListener("click", onLoadMore);
-
 
 
 
@@ -86,7 +87,9 @@ function createMurkup(data, amounOfItemsOnPage) {
     const galleryMurkup = hits.map((image) => {
         const { webformatURL, largeImageURL, tags, likes, views, comments, downloads } = image;
         return `<div class="photo-card">
-                    <a href="${largeImageURL}"><img src="${webformatURL}" alt="${tags}" loading="lazy" width=320 height=240 /></a>
+                    <a href="${largeImageURL}">
+                        <img src="${webformatURL}" alt="${tags}" title="" loading="lazy" width=320 height=240 />
+                    </a>
                     <div class="info">
                         <p class="info-item">
                             <b>Likes</b>
@@ -106,7 +109,7 @@ function createMurkup(data, amounOfItemsOnPage) {
                         </p>
                     </div>
                 </div>`;
-        }).join(" ");
+        }).join("");
 
     if (amounOfItemsOnPage >= totalHits) {
             Notify.failure("We're sorry, but you've reached the end of search results.", {timeout: 5000});
