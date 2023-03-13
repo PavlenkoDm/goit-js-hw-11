@@ -11,7 +11,7 @@ const itemsOnPage = 40;
 let totalItems = 0;
 let isActive = false;
 
-const lightbox = new SimpleLightbox(".gallery a", {captionDelay: 300, captionsData: "alt"});
+const lightbox = new SimpleLightbox(".gallery a", {captionDelay: 300});
 
 
 
@@ -87,8 +87,15 @@ function createMurkup(data, amounOfItemsOnPage) {
     const galleryMurkup = hits.map((image) => {
         const { webformatURL, largeImageURL, tags, likes, views, comments, downloads } = image;
         return `<div class="photo-card">
-                    <a href="${largeImageURL}">
-                        <img src="${webformatURL}" alt="${tags}" title="" loading="lazy" width=320 height=240 />
+                    <a href=${largeImageURL}>
+                        <img
+                            src=${webformatURL} 
+                            alt=${tags} 
+                            title=${tags} 
+                            loading="lazy" 
+                            width=320 
+                            height=240 
+                        />
                     </a>
                     <div class="info">
                         <p class="info-item">
