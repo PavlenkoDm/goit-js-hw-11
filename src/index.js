@@ -31,7 +31,7 @@ refs.buttonLoadMore.addEventListener("click", onLoadMore);
 //====================================================== Функция обработчик по сабмиту ========================================================//
 async function onSubmit(event) {
     event.preventDefault();
-    if (isActive === true) return;
+    if (isActive) return;
     toggleIsActiveProp(true);
     refs.gallery.innerHTML = "";
     totalItems = 0;
@@ -41,10 +41,14 @@ async function onSubmit(event) {
     // console.log(event.currentTarget.elements.name.value);
     if (!userInput) return;    
 
-
-    const options = createUrlParameters(userInput, currentPage, itemsOnPage);
-    const gotImages = await getImages(options);
-    createMurkup(gotImages, totalItems);
+    try {
+        const options = createUrlParameters(userInput, currentPage, itemsOnPage);
+        const gotImages = await getImages(options);
+        createMurkup(gotImages, totalItems);
+    } catch (error) {
+        console.log(error.message);
+        Notify.failure(error.message);
+    }
     toggleIsActiveProp(false);
 }
 
@@ -52,13 +56,17 @@ async function onSubmit(event) {
 //=================================================Асинхронная функция обработчик по клику догрузки ========================================================//
 async function onLoadMore(event) {
     event.preventDefault();
-    if (isActive === true) return;
+    if (isActive) return;
     toggleIsActiveProp(true);
     
-
-    const options = createUrlParameters(userInput, currentPage, itemsOnPage);
-    const gotImages = await getImages(options);
-    createMurkup(gotImages, totalItems);
+    try {
+        const options = createUrlParameters(userInput, currentPage, itemsOnPage);
+        const gotImages = await getImages(options);
+        createMurkup(gotImages, totalItems);
+    } catch (error) {
+        console.log(error.message);
+        Notify.failure(error.message);
+    }
     toggleIsActiveProp(false);
 }
 
@@ -66,15 +74,8 @@ async function onLoadMore(event) {
 
 //=================================================Асинхронная функция стягивания картинок =============================================//
 async function getImages(urlOptions) {
-    try {
-        const response = await axios.get('https://pixabay.com/api/', urlOptions);
-        return response.data;
-    } catch (error) {
-        toggleIsActiveProp(false);
-        console.log(error.message);
-        Notify.failure(error.message);
-        return error;
-    }
+    const response = await axios.get('https://pixabay.com/api/', urlOptions);
+    return response.data;
 }
 
 
@@ -96,7 +97,6 @@ function createMurkup(data, amounOfItemsOnPage) {
 
     if (hits.length < itemsOnPage) {
         onHideButtonLoadMore();
-        return;
     }
 
     const galleryMurkup = hits.map((image) => {
@@ -156,13 +156,13 @@ function toggleIsActiveProp(bool) {
 function createUrlParameters(inputValue, pageCurrent, amountOnPage) {
     return {
         params: {
-        key: "34323245-7786a126c6836dc3f9fefa48e",
-        q: inputValue,
-        page: pageCurrent,
-        per_page: amountOnPage,
-        image_type: "photo",
-        orientation: "horizontal",
-        safesearch: true,
-    }  
+            key: "34323245-7786a126c6836dc3f9fefa48e",
+            q: inputValue,
+            page: pageCurrent,
+            per_page: amountOnPage,
+            image_type: "photo",
+            orientation: "horizontal",
+            safesearch: true,
+        }  
     }
 }
