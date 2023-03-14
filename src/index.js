@@ -1,5 +1,6 @@
-import SimpleLightbox from "simplelightbox";
+import SimpleLightbox from 'simplelightbox';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { refs } from './refs/reference';
 import { getImages } from './api/get-images';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -35,13 +36,22 @@ async function onSubmit(event) {
     if (!userInput) return;    
 
     try {
+        Loading.standard();
         const options = createUrlParameters(userInput, currentPage, itemsOnPage);
         const gotImages = await getImages(options);
+        Loading.remove();
+
         createMurkup(gotImages, totalItems);
+        
+        lightbox.refresh();
+
+        if(gotImages.hasOwnProperty("totalHits")) onSmoothScroll();
+        
     } catch (error) {
         console.log(error.message);
         Notify.failure(error.message);
     }
+
     toggleIsActiveProp(false);
 }
 
@@ -53,13 +63,22 @@ async function onLoadMore(event) {
     toggleIsActiveProp(true);
     
     try {
+        Loading.standard();
         const options = createUrlParameters(userInput, currentPage, itemsOnPage);
         const gotImages = await getImages(options);
+        Loading.remove();
+
         createMurkup(gotImages, totalItems);
+
+        lightbox.refresh();
+
+        if(gotImages.hasOwnProperty("totalHits")) onSmoothScroll();
+
     } catch (error) {
         console.log(error.message);
         Notify.failure(error.message);
     }
+
     toggleIsActiveProp(false);
 }
 
@@ -67,12 +86,13 @@ async function onLoadMore(event) {
 
 //=== ФУНКЦИЯ СОЗДАНИЯ РАЗМЕТКИ ===========================================================//
 function createMurkup(data, amounOfItemsOnPage) {
+    console.log(data);
     if (!data.hasOwnProperty("totalHits")) return;
 
     refs.buttonLoadMore.classList.remove("hide");
 
-    const { hits, totalHits } = data; 
-    
+    const { hits, totalHits } = data;
+
     if (hits.length === 0) {
         console.log("Sorry, there are no images matching your search query. Please try again.");
         Notify.failure("Sorry, there are no images matching your search query. Please try again.");
@@ -90,8 +110,8 @@ function createMurkup(data, amounOfItemsOnPage) {
                     <a href=${largeImageURL}>
                         <img
                             src=${webformatURL} 
-                            alt=${tags} 
-                            title=${tags} 
+                            alt="" 
+                            title="${tags}" 
                             loading="lazy" 
                             width=320 
                             height=240 
@@ -162,3 +182,15 @@ function createUrlParameters(inputValue, pageCurrent, amountOnPage) {
 }
 
 
+
+//=== ФУНКЦИЯ ПЛАВНОГО СКРОЛА - СТАВИТСЯ ПОСЛЕ ДОБАВЛЕНИЯ РАЗМЕТКИ =======//
+function onSmoothScroll() {
+    const { height: cardHeight } = document
+        .querySelector(".gallery")
+        .firstElementChild.getBoundingClientRect();
+
+        window.scrollBy({
+        top: cardHeight * 1,
+        behavior: "smooth",
+        });
+}

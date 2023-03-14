@@ -31,9 +31,12 @@ ul {
 
 .search-form>input {
   width: 200px;
+  height: 35px;
   border-radius: 4px;
   color: #2f55ee;
   background-color: #f0f8ff;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .search-form>button:hover,
@@ -46,6 +49,8 @@ ul {
   color: #2f55ee;
   background-color: #f0f8ff;
   border: none;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .wrapper {
@@ -116,10 +121,14 @@ button.load-more {
   font-weight: 550;
   border-radius: 10px;
   color: #414e52;
-  background-color: #f4f5e9;
+  background-color: #e5f5f2;
   border: none;
-  width: 300px;
+  width: 500px;
   height: 50px;
   box-shadow: 2px 2px 4px #0006;
+}
+
+button.load-more:hover {
+  background-color: rgb(195, 226, 254);
 }
 
