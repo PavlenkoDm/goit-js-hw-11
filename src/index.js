@@ -72,7 +72,9 @@ async function onLoadMore(event) {
 
         lightbox.refresh();
 
-        if(gotImages.hasOwnProperty("totalHits")) onSmoothScroll();
+        if (gotImages.hasOwnProperty("totalHits")) {
+            onSmoothScroll();
+        }
 
     } catch (error) {
         console.log(error.message);
